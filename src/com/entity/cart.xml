@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 配置Mabatis映射文件 -->
+<mapper namespace="com.dao.CartDAO">
+	<resultMap type="cart" id="cartMap">
+		<id property="cartid" column="cartid" />
+		<result property="usersid" column="usersid" />
+		<result property="concertid" column="concertid" />
+		<result property="ticketid" column="ticketid" />
+		<result property="num" column="num" />
+		<result property="price" column="price" />
+		<result property="addtime" column="addtime" />
+		<result property="username" column="username" />
+		<result property="title" column="title" />
+		<result property="areaname" column="areaname" />
+	</resultMap>
+	<!-- 插入语句 DAO通过id调用此配置 -->
+	<insert id="insertCart" parameterType="cart">
+		insert into cart(cartid , usersid , concertid , ticketid , num , price ,
+		addtime ) values(#{cartid} , #{usersid} , #{concertid} , #{ticketid} ,
+		#{num} , #{price} , #{addtime} )
+	</insert>
+	<!-- 更新语句 DAO通过id调用此配置 -->
+	<update id="updateCart" parameterType="cart">
+		update cart set usersid=#{usersid} , concertid=#{concertid} ,
+		ticketid=#{ticketid} , num=#{num} , price=#{price} ,
+		addtime=#{addtime} where cartid=#{cartid}
+	</update>
+	<!-- 按主键删除 DAO通过id调用此配置 -->
+	<delete id="deleteCart" parameterType="String">
+		delete from cart where cartid = #{cartid}
+	</delete>
+	<!-- 查询全部信息 DAO通过id调用此配置 -->
+	<select id="getAllCart" resultMap="cartMap">
+		select a.* , b.username , c.title , d.areaname from cart a , users b ,
+		concert c , ticket d where 1=1 and a.usersid = b.usersid and
+		a.concertid = c.concertid and a.ticketid = d.ticketid order by cartid
+		desc
+	</select>
+	<!-- 按主键查询 DAO通过id调用此配置 -->
+	<select id="getCartById" parameterType="String" resultMap="cartMap">
+		select a.* , b.username , c.title , d.areaname from cart a , users b ,
+		concert c , ticket d where 1=1 and a.usersid = b.usersid and
+		a.concertid = c.concertid and a.ticketid = d.ticketid and
+		cartid=#{cartid} order by cartid desc
+	</select>
+	<!-- 按条件精确查询 DAO通过id调用此配置 -->
+	<select id="getCartByCond" parameterType="cart" resultMap="cartMap">
+		select a.* , b.username , c.title , d.areaname from cart a , users b ,
+		concert c , ticket d where 1=1 and a.usersid = b.usersid and
+		a.concertid = c.concertid and a.ticketid = d.ticketid
+		<if test="usersid != null and '' != usersid">
+			and a.usersid = #{usersid}
+		</if>
+		<if test="concertid != null and '' != concertid">
+			and a.concertid = #{concertid}
+		</if>
+		<if test="ticketid != null and '' != ticketid">
+			and a.ticketid = #{ticketid}
+		</if>
+		<if test="num != null and '' != num">
+			and a.num = #{num}
+		</if>
+		<if test="price != null and '' != price">
+			and a.price = #{price}
+		</if>
+		<if test="addtime != null and '' != addtime">
+			and a.addtime = #{addtime}
+		</if>
+	</select>
+	<!-- 按条件模糊查询 DAO通过id调用此配置 -->
+	<select id="getCartByLike" parameterType="cart" resultMap="cartMap">
+		select a.* , b.username , c.title , d.areaname from cart a , users b ,
+		concert c , ticket d where 1=1 and a.usersid = b.usersid and
+		a.concertid = c.concertid and a.ticketid = d.ticketid
+		<if test="usersid != null and '' != usersid">
+			and a.usersid like CONCAT('%', CONCAT(#{usersid}, '%'))
+		</if>
+		<if test="concertid != null and '' != concertid">
+			and a.concertid like CONCAT('%', CONCAT(#{concertid}, '%'))
+		</if>
+		<if test="ticketid != null and '' != ticketid">
+			and a.ticketid like CONCAT('%', CONCAT(#{ticketid}, '%'))
+		</if>
+		<if test="num != null and '' != num">
+			and a.num like CONCAT('%', CONCAT(#{num}, '%'))
+		</if>
+		<if test="price != null and '' != price">
+			and a.price like CONCAT('%', CONCAT(#{price}, '%'))
+		</if>
+		<if test="addtime != null and '' != addtime">
+			and a.addtime like CONCAT('%', CONCAT(#{addtime}, '%'))
+		</if>
+	</select>
+</mapper>
+
+

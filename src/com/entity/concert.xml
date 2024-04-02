@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 配置Mabatis映射文件 -->
+<mapper namespace="com.dao.ConcertDAO">
+	<resultMap type="concert" id="concertMap">
+		<id property="concertid" column="concertid" />
+		<result property="title" column="title" />
+		<result property="image" column="image" />
+		<result property="cateid" column="cateid" />
+		<result property="actor" column="actor" />
+		<result property="recommend" column="recommend" />
+		<result property="address" column="address" />
+		<result property="addtime" column="addtime" />
+		<result property="hits" column="hits" />
+		<result property="sellnum" column="sellnum" />
+		<result property="contents" column="contents" />
+		<result property="catename" column="catename" />
+	</resultMap>
+	<!-- 插入语句 DAO通过id调用此配置 -->
+	<insert id="insertConcert" parameterType="concert">
+		insert into
+		concert(concertid , title , image , cateid , actor , recommend ,
+		address , addtime , hits , sellnum , contents ) values(#{concertid} ,
+		#{title} , #{image} , #{cateid} , #{actor} , #{recommend} , #{address}
+		, #{addtime} , #{hits} , #{sellnum} , #{contents} )
+	</insert>
+	<!-- 更新语句 DAO通过id调用此配置 -->
+	<update id="updateConcert" parameterType="concert">
+		update concert set
+		title=#{title} , image=#{image} , cateid=#{cateid} ,
+		actor=#{actor} ,
+		recommend=#{recommend} , address=#{address} ,
+		addtime=#{addtime} ,
+		hits=#{hits} , sellnum=#{sellnum} ,
+		contents=#{contents} where
+		concertid=#{concertid}
+	</update>
+	<!-- 按主键删除 DAO通过id调用此配置 -->
+	<delete id="deleteConcert" parameterType="String">
+		delete from concert
+		where concertid = #{concertid}
+	</delete>
+	<!-- 查询全部信息 DAO通过id调用此配置 -->
+	<select id="getAllConcert" resultMap="concertMap">
+		select a.* , b.catename
+		from concert a , cate b where a.cateid =
+		b.cateid order by
+		concertid
+		desc
+	</select>
+
+	<select id="getConcertByHot" resultMap="concertMap">
+		select a.* , b.catename
+		from concert a , cate b where a.cateid =
+		b.cateid order by
+		concertid
+		desc limit 5
+	</select>
+
+	<select id="getConcertByNews" resultMap="concertMap">
+		select a.* , b.catename
+		from concert a , cate b where a.cateid =
+		b.cateid order by
+		concertid
+		desc limit 4
+	</select>
+
+	<select id="getConcertByCate" parameterType="String" resultMap="concertMap">
+		select a.* , b.catename from concert a , cate b where a.cateid
+		=
+		b.cateid and a.cateid=#{cateid} order by concertid desc limit 5
+	</select>
+
+	<!-- 按主键查询 DAO通过id调用此配置 -->
+	<select id="getConcertById" parameterType="String" resultMap="concertMap">
+		select a.* , b.catename from concert a , cate b where a.cateid
+		=
+		b.cateid and concertid=#{concertid} order by concertid desc
+	</select>
+	<!-- 按条件精确查询 DAO通过id调用此配置 -->
+	<select id="getConcertByCond" parameterType="concert" resultMap="concertMap">
+		select a.* , b.catename from concert a , cate b where a.cateid
+		=
+		b.cateid
+		<if test="title != null and '' != title">
+			and a.title = #{title}
+		</if>
+		<if test="image != null and '' != image">
+			and a.image = #{image}
+		</if>
+		<if test="cateid != null and '' != cateid">
+			and a.cateid = #{cateid}
+		</if>
+		<if test="actor != null and '' != actor">
+			and a.actor = #{actor}
+		</if>
+		<if test="recommend != null and '' != recommend">
+			and a.recommend = #{recommend}
+		</if>
+		<if test="address != null and '' != address">
+			and a.address = #{address}
+		</if>
+		<if test="addtime != null and '' != addtime">
+			and a.addtime = #{addtime}
+		</if>
+		<if test="hits != null and '' != hits">
+			and a.hits = #{hits}
+		</if>
+		<if test="sellnum != null and '' != sellnum">
+			and a.sellnum = #{sellnum}
+		</if>
+		<if test="contents != null and '' != contents">
+			and a.contents = #{contents}
+		</if>
+	</select>
+	<!-- 按条件模糊查询 DAO通过id调用此配置 -->
+	<select id="getConcertByLike" parameterType="concert" resultMap="concertMap">
+		select a.* , b.catename from concert a , cate b where a.cateid
+		=
+		b.cateid
+		<if test="title != null and '' != title">
+			and a.title like CONCAT('%', CONCAT(#{title}, '%'))
+		</if>
+		<if test="image != null and '' != image">
+			and a.image like CONCAT('%', CONCAT(#{image}, '%'))
+		</if>
+		<if test="cateid != null and '' != cateid">
+			and a.cateid like CONCAT('%', CONCAT(#{cateid}, '%'))
+		</if>
+		<if test="actor != null and '' != actor">
+			and a.actor like CONCAT('%', CONCAT(#{actor}, '%'))
+		</if>
+		<if test="recommend != null and '' != recommend">
+			and a.recommend like CONCAT('%', CONCAT(#{recommend},
+			'%'))
+		</if>
+		<if test="address != null and '' != address">
+			and a.address like CONCAT('%', CONCAT(#{address}, '%'))
+		</if>
+		<if test="addtime != null and '' != addtime">
+			and a.addtime like CONCAT('%', CONCAT(#{addtime}, '%'))
+		</if>
+		<if test="hits != null and '' != hits">
+			and a.hits like CONCAT('%', CONCAT(#{hits}, '%'))
+		</if>
+		<if test="sellnum != null and '' != sellnum">
+			and a.sellnum like CONCAT('%', CONCAT(#{sellnum}, '%'))
+		</if>
+		<if test="contents != null and '' != contents">
+			and a.contents like CONCAT('%', CONCAT(#{contents}, '%'))
+		</if>
+	</select>
+</mapper>
+
+

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 配置Mabatis映射文件 -->
+<mapper namespace="com.dao.CateDAO">
+	<resultMap type="cate" id="cateMap">
+		<id property="cateid" column="cateid" />
+		<result property="catename" column="catename" />
+		<result property="memo" column="memo" />
+	</resultMap>
+	<!-- 插入语句 DAO通过id调用此配置 -->
+	<insert id="insertCate" parameterType="cate">
+		insert into cate(cateid ,
+		catename , memo ) values(#{cateid} , #{catename} ,
+		#{memo} )
+	</insert>
+	<!-- 更新语句 DAO通过id调用此配置 -->
+	<update id="updateCate" parameterType="cate">
+		update cate set
+		catename=#{catename} , memo=#{memo} where cateid=#{cateid}
+	</update>
+	<!-- 按主键删除 DAO通过id调用此配置 -->
+	<delete id="deleteCate" parameterType="String">
+		delete from cate where
+		cateid = #{cateid}
+	</delete>
+	<!-- 查询全部信息 DAO通过id调用此配置 -->
+	<select id="getAllCate" resultMap="cateMap">
+		select a.* from cate a where
+		1=1 order by cateid desc
+	</select>
+	<select id="getFrontCate" resultMap="cateMap">
+		select a.* from cate a order
+		by cateid desc limit 3
+	</select>
+	<!-- 按主键查询 DAO通过id调用此配置 -->
+	<select id="getCateById" parameterType="String" resultMap="cateMap">
+		select a.* from cate a where 1=1 and cateid=#{cateid} order by cateid
+		desc
+	</select>
+	<!-- 按条件精确查询 DAO通过id调用此配置 -->
+	<select id="getCateByCond" parameterType="cate" resultMap="cateMap">
+		select a.* from cate a where 1=1
+		<if test="catename != null and '' != catename">
+			and a.catename = #{catename}
+		</if>
+		<if test="memo != null and '' != memo">
+			and a.memo = #{memo}
+		</if>
+	</select>
+	<!-- 按条件模糊查询 DAO通过id调用此配置 -->
+	<select id="getCateByLike" parameterType="cate" resultMap="cateMap">
+		select a.* from cate a where 1=1
+		<if test="catename != null and '' != catename">
+			and a.catename like CONCAT('%', CONCAT(#{catename}, '%'))
+		</if>
+		<if test="memo != null and '' != memo">
+			and a.memo like CONCAT('%', CONCAT(#{memo}, '%'))
+		</if>
+	</select>
+</mapper>
+
+

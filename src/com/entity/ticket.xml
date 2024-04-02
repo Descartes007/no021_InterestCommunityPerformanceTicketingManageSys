@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 配置Mabatis映射文件 -->
+<mapper namespace="com.dao.TicketDAO">
+	<resultMap type="ticket" id="ticketMap">
+		<id property="ticketid" column="ticketid" />
+		<result property="concertid" column="concertid" />
+		<result property="areaname" column="areaname" />
+		<result property="price" column="price" />
+		<result property="storage" column="storage" />
+		<result property="sellnum" column="sellnum" />
+		<result property="balance" column="balance" />
+		<result property="title" column="title" />
+	</resultMap>
+	<!-- 插入语句 DAO通过id调用此配置 -->
+	<insert id="insertTicket" parameterType="ticket">
+		insert into ticket(ticketid , concertid , areaname , price , storage ,
+		sellnum , balance ) values(#{ticketid} , #{concertid} , #{areaname} ,
+		#{price} , #{storage} , #{sellnum} , #{balance} )
+	</insert>
+	<!-- 更新语句 DAO通过id调用此配置 -->
+	<update id="updateTicket" parameterType="ticket">
+		update ticket set concertid=#{concertid} , areaname=#{areaname} ,
+		price=#{price} , storage=#{storage} , sellnum=#{sellnum} ,
+		balance=#{balance} where ticketid=#{ticketid}
+	</update>
+	<!-- 按主键删除 DAO通过id调用此配置 -->
+	<delete id="deleteTicket" parameterType="String">
+		delete from ticket where ticketid = #{ticketid}
+	</delete>
+	<!-- 查询全部信息 DAO通过id调用此配置 -->
+	<select id="getAllTicket" resultMap="ticketMap">
+		select a.* , b.title from ticket a , concert b where 1=1 and a.concertid =
+		b.concertid order by ticketid desc
+	</select>
+	<!-- 按主键查询 DAO通过id调用此配置 -->
+	<select id="getTicketById" parameterType="String" resultMap="ticketMap">
+		select a.* , b.title from ticket a , concert b where 1=1 and
+		a.concertid = b.concertid and ticketid=#{ticketid} order by ticketid
+		desc
+	</select>
+	<!-- 按条件精确查询 DAO通过id调用此配置 -->
+	<select id="getTicketByCond" parameterType="ticket" resultMap="ticketMap">
+		select a.* , b.title from ticket a , concert b where 1=1 and
+		a.concertid = b.concertid
+		<if test="concertid != null and '' != concertid">
+			and a.concertid = #{concertid}
+		</if>
+		<if test="areaname != null and '' != areaname">
+			and a.areaname = #{areaname}
+		</if>
+		<if test="price != null and '' != price">
+			and a.price = #{price}
+		</if>
+		<if test="storage != null and '' != storage">
+			and a.storage = #{storage}
+		</if>
+		<if test="sellnum != null and '' != sellnum">
+			and a.sellnum = #{sellnum}
+		</if>
+		<if test="balance != null and '' != balance">
+			and a.balance = #{balance}
+		</if>
+	</select>
+	<!-- 按条件模糊查询 DAO通过id调用此配置 -->
+	<select id="getTicketByLike" parameterType="ticket" resultMap="ticketMap">
+		select a.* , b.title from ticket a , concert b where 1=1 and
+		a.concertid = b.concertid
+		<if test="concertid != null and '' != concertid">
+			and a.concertid like CONCAT('%', CONCAT(#{concertid}, '%'))
+		</if>
+		<if test="areaname != null and '' != areaname">
+			and a.areaname like CONCAT('%', CONCAT(#{areaname}, '%'))
+		</if>
+		<if test="price != null and '' != price">
+			and a.price like CONCAT('%', CONCAT(#{price}, '%'))
+		</if>
+		<if test="storage != null and '' != storage">
+			and a.storage like CONCAT('%', CONCAT(#{storage}, '%'))
+		</if>
+		<if test="sellnum != null and '' != sellnum">
+			and a.sellnum like CONCAT('%', CONCAT(#{sellnum}, '%'))
+		</if>
+		<if test="balance != null and '' != balance">
+			and a.balance like CONCAT('%', CONCAT(#{balance}, '%'))
+		</if>
+	</select>
+</mapper>
+
+

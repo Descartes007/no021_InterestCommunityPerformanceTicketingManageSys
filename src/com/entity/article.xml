@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 配置Mabatis映射文件 -->
+<mapper namespace="com.dao.ArticleDAO">
+	<resultMap type="article" id="articleMap">
+		<id property="articleid" column="articleid" />
+		<result property="title" column="title" />
+		<result property="image" column="image" />
+		<result property="contents" column="contents" />
+		<result property="addtime" column="addtime" />
+		<result property="hits" column="hits" />
+	</resultMap>
+	<!-- 插入语句 DAO通过id调用此配置 -->
+	<insert id="insertArticle" parameterType="article">
+		insert into article(articleid , title , image , contents , addtime , hits )
+		values(#{articleid} , #{title} , #{image} , #{contents} , #{addtime} ,
+		#{hits} )
+	</insert>
+	<!-- 更新语句 DAO通过id调用此配置 -->
+	<update id="updateArticle" parameterType="article">
+		update article set title=#{title} , image=#{image} , contents=#{contents} ,
+		addtime=#{addtime} , hits=#{hits} where articleid=#{articleid}
+	</update>
+	<!-- 按主键删除 DAO通过id调用此配置 -->
+	<delete id="deleteArticle" parameterType="String">
+		delete from article where articleid = #{articleid}
+	</delete>
+	<!-- 查询全部信息 DAO通过id调用此配置 -->
+	<select id="getAllArticle" resultMap="articleMap">
+		select a.* from article a where 1=1 order by articleid desc
+	</select>
+	<!-- 按主键查询 DAO通过id调用此配置 -->
+	<select id="getArticleById" parameterType="String" resultMap="articleMap">
+		select a.* from article a where 1=1 and articleid=#{articleid} order
+		by articleid desc
+	</select>
+	<!-- 按条件精确查询 DAO通过id调用此配置 -->
+	<select id="getArticleByCond" parameterType="article" resultMap="articleMap">
+		select a.* from article a where 1=1
+		<if test="title != null and '' != title">
+			and a.title = #{title}
+		</if>
+		<if test="image != null and '' != image">
+			and a.image = #{image}
+		</if>
+		<if test="contents != null and '' != contents">
+			and a.contents = #{contents}
+		</if>
+		<if test="addtime != null and '' != addtime">
+			and a.addtime = #{addtime}
+		</if>
+		<if test="hits != null and '' != hits">
+			and a.hits = #{hits}
+		</if>
+	</select>
+	<!-- 按条件模糊查询 DAO通过id调用此配置 -->
+	<select id="getArticleByLike" parameterType="article" resultMap="articleMap">
+		select a.* from article a where 1=1
+		<if test="title != null and '' != title">
+			and a.title like CONCAT('%', CONCAT(#{title}, '%'))
+		</if>
+		<if test="image != null and '' != image">
+			and a.image like CONCAT('%', CONCAT(#{image}, '%'))
+		</if>
+		<if test="contents != null and '' != contents">
+			and a.contents like CONCAT('%', CONCAT(#{contents}, '%'))
+		</if>
+		<if test="addtime != null and '' != addtime">
+			and a.addtime like CONCAT('%', CONCAT(#{addtime}, '%'))
+		</if>
+		<if test="hits != null and '' != hits">
+			and a.hits like CONCAT('%', CONCAT(#{hits}, '%'))
+		</if>
+	</select>
+</mapper>
+
+

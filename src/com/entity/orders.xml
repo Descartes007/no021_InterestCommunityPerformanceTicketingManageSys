@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 配置Mabatis映射文件 -->
+<mapper namespace="com.dao.OrdersDAO">
+	<resultMap type="orders" id="ordersMap">
+		<id property="ordersid" column="ordersid" />
+		<result property="ordercode" column="ordercode" />
+		<result property="usersid" column="usersid" />
+		<result property="concertid" column="concertid" />
+		<result property="ticketid" column="ticketid" />
+		<result property="price" column="price" />
+		<result property="num" column="num" />
+		<result property="total" column="total" />
+		<result property="status" column="status" />
+		<result property="username" column="username" />
+		<result property="title" column="title" />
+		<result property="areaname" column="areaname" />
+	</resultMap>
+	<!-- 插入语句 DAO通过id调用此配置 -->
+	<insert id="insertOrders" parameterType="orders">
+		insert into orders(ordersid , ordercode , usersid , concertid , ticketid ,
+		price , num , total , status ) values(#{ordersid} , #{ordercode} ,
+		#{usersid} , #{concertid} , #{ticketid} , #{price} , #{num} , #{total}
+		, #{status} )
+	</insert>
+	<!-- 更新语句 DAO通过id调用此配置 -->
+	<update id="updateOrders" parameterType="orders">
+		update orders set ordercode=#{ordercode} , usersid=#{usersid} ,
+		concertid=#{concertid} , ticketid=#{ticketid} , price=#{price} ,
+		num=#{num} , total=#{total} , status=#{status} where
+		ordersid=#{ordersid}
+	</update>
+	<!-- 按主键删除 DAO通过id调用此配置 -->
+	<delete id="deleteOrders" parameterType="String">
+		delete from orders where ordersid = #{ordersid}
+	</delete>
+	<!-- 查询全部信息 DAO通过id调用此配置 -->
+	<select id="getAllOrders" resultMap="ordersMap">
+		select a.* , b.username , c.title , d.areaname from orders a , users b ,
+		concert c , ticket d where 1=1 and a.usersid = b.usersid and
+		a.concertid = c.concertid and a.ticketid = d.ticketid order by
+		ordersid desc
+	</select>
+	<!-- 按主键查询 DAO通过id调用此配置 -->
+	<select id="getOrdersById" parameterType="String" resultMap="ordersMap">
+		select a.* , b.username , c.title , d.areaname from orders a , users b
+		, concert c , ticket d where 1=1 and a.usersid = b.usersid and
+		a.concertid = c.concertid and a.ticketid = d.ticketid and
+		ordersid=#{ordersid} order by ordersid desc
+	</select>
+	<!-- 按条件精确查询 DAO通过id调用此配置 -->
+	<select id="getOrdersByCond" parameterType="orders" resultMap="ordersMap">
+		select a.* , b.username , c.title , d.areaname from orders a , users b
+		, concert c , ticket d where 1=1 and a.usersid = b.usersid and
+		a.concertid = c.concertid and a.ticketid = d.ticketid
+		<if test="ordercode != null and '' != ordercode">
+			and a.ordercode = #{ordercode}
+		</if>
+		<if test="usersid != null and '' != usersid">
+			and a.usersid = #{usersid}
+		</if>
+		<if test="concertid != null and '' != concertid">
+			and a.concertid = #{concertid}
+		</if>
+		<if test="ticketid != null and '' != ticketid">
+			and a.ticketid = #{ticketid}
+		</if>
+		<if test="price != null and '' != price">
+			and a.price = #{price}
+		</if>
+		<if test="num != null and '' != num">
+			and a.num = #{num}
+		</if>
+		<if test="total != null and '' != total">
+			and a.total = #{total}
+		</if>
+		<if test="status != null and '' != status">
+			and a.status = #{status}
+		</if>
+	</select>
+	<!-- 按条件模糊查询 DAO通过id调用此配置 -->
+	<select id="getOrdersByLike" parameterType="orders" resultMap="ordersMap">
+		select a.* , b.username , c.title , d.areaname from orders a , users b
+		, concert c , ticket d where 1=1 and a.usersid = b.usersid and
+		a.concertid = c.concertid and a.ticketid = d.ticketid
+		<if test="ordercode != null and '' != ordercode">
+			and a.ordercode like CONCAT('%', CONCAT(#{ordercode}, '%'))
+		</if>
+		<if test="usersid != null and '' != usersid">
+			and a.usersid like CONCAT('%', CONCAT(#{usersid}, '%'))
+		</if>
+		<if test="concertid != null and '' != concertid">
+			and a.concertid like CONCAT('%', CONCAT(#{concertid}, '%'))
+		</if>
+		<if test="ticketid != null and '' != ticketid">
+			and a.ticketid like CONCAT('%', CONCAT(#{ticketid}, '%'))
+		</if>
+		<if test="price != null and '' != price">
+			and a.price like CONCAT('%', CONCAT(#{price}, '%'))
+		</if>
+		<if test="num != null and '' != num">
+			and a.num like CONCAT('%', CONCAT(#{num}, '%'))
+		</if>
+		<if test="total != null and '' != total">
+			and a.total like CONCAT('%', CONCAT(#{total}, '%'))
+		</if>
+		<if test="status != null and '' != status">
+			and a.status like CONCAT('%', CONCAT(#{status}, '%'))
+		</if>
+	</select>
+</mapper>
+
+
